@@ -16,7 +16,8 @@ from assessor import get_score_label
 
 SECTOR_BENCHMARKS = {
     "Power Generation": {
-        "gcc_median": 2.3,
+        "gcc_range_low": 2.0,
+        "gcc_range_high": 2.6,
         "gcc_leaders": ["Saudi Electricity Company (SEC)", "ACWA Power", "DEWA"],
         "leader_score_estimate": "3.8–4.2",
         "primary_kpis": [
@@ -49,7 +50,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Oil & Gas Upstream": {
-        "gcc_median": 3.1,
+        "gcc_range_low": 2.8,
+        "gcc_range_high": 3.4,
         "gcc_leaders": ["Saudi Aramco", "ADNOC"],
         "leader_score_estimate": "4.5–5.0",
         "primary_kpis": [
@@ -82,7 +84,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Oil & Gas Downstream": {
-        "gcc_median": 2.7,
+        "gcc_range_low": 2.4,
+        "gcc_range_high": 3.0,
         "gcc_leaders": ["SABIC", "ADNOC Refining"],
         "leader_score_estimate": "3.5–4.0",
         "primary_kpis": [
@@ -115,7 +118,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Renewables": {
-        "gcc_median": 2.5,
+        "gcc_range_low": 2.2,
+        "gcc_range_high": 2.8,
         "gcc_leaders": ["ACWA Power", "Masdar", "NEOM Energy"],
         "leader_score_estimate": "3.5–4.2",
         "primary_kpis": [
@@ -148,7 +152,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Water & Desalination": {
-        "gcc_median": 2.2,
+        "gcc_range_low": 1.9,
+        "gcc_range_high": 2.5,
         "gcc_leaders": ["ACWA Power Water", "DEWA Water", "SWCC"],
         "leader_score_estimate": "3.2–3.8",
         "primary_kpis": [
@@ -182,7 +187,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Transmission & Distribution": {
-        "gcc_median": 2.4,
+        "gcc_range_low": 2.1,
+        "gcc_range_high": 2.7,
         "gcc_leaders": ["SEC T&D Division", "TRANSCO UAE", "Kahramaa"],
         "leader_score_estimate": "3.4–3.9",
         "primary_kpis": [
@@ -216,7 +222,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Energy Holding / Conglomerate": {
-        "gcc_median": 2.8,
+        "gcc_range_low": 2.5,
+        "gcc_range_high": 3.1,
         "gcc_leaders": ["Saudi Aramco", "ADNOC Group", "ACWA Power"],
         "leader_score_estimate": "3.8–4.5",
         "primary_kpis": [
@@ -250,7 +257,8 @@ SECTOR_BENCHMARKS = {
         ),
     },
     "Other Energy": {
-        "gcc_median": 2.4,
+        "gcc_range_low": 2.0,
+        "gcc_range_high": 2.8,
         "gcc_leaders": ["Sector leaders vary"],
         "leader_score_estimate": "3.2–4.0",
         "primary_kpis": [
@@ -298,8 +306,8 @@ def generate_report(
 
     # Get sector benchmark data
     benchmark = SECTOR_BENCHMARKS.get(org_sector, SECTOR_BENCHMARKS["Other Energy"])
-    gcc_median = benchmark["gcc_median"]
-    gap_to_median = round(overall_score - gcc_median, 2)
+    gcc_range_low = benchmark["gcc_range_low"]
+    gcc_range_high = benchmark["gcc_range_high"]
     gap_to_leaders = benchmark["leader_score_estimate"]
 
     dim_summary = "\n".join([
@@ -408,8 +416,7 @@ Strongest type: {strongest_type[0]} (avg {strongest_type[1]}/5.0)
 SECTOR BENCHMARK DATA
 ═══════════════════════════════════════════════════
 Sector: {org_sector}
-GCC Sector Median (indicative, based on public disclosures): {gcc_median}/5.0
-Gap to GCC median: {gap_to_median:+.2f} points
+Indicative sector range: {gcc_range_low} — {gcc_range_high} out of 5.0
 GCC sector leaders: {", ".join(benchmark["gcc_leaders"])}
 Estimated leader score range: {gap_to_leaders}/5.0
 
@@ -485,7 +492,7 @@ Name the specific {org_sector} KPI that will be reported to leadership at Day 90
 
 ### 5. BENCHMARK: WHERE YOU STAND IN THE GCC
 One honest paragraph.
-- State the gap to GCC median ({gcc_median}/5.0) and what it means in execution terms
+- Reference the indicative sector range ({gcc_range_low}–{gcc_range_high}/5.0) and state whether this organisation falls below, within, or above it — and what that means in execution terms
 - Reference what {", ".join(benchmark["gcc_leaders"][:2])} have achieved specifically
 - Be honest about the recovery timeline — do not be vague
 - Close with one sentence on the window of opportunity before the gap becomes structural

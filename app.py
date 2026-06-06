@@ -264,29 +264,36 @@ def show_results_view(results):
         """, unsafe_allow_html=True)
 
         # Sector benchmark
-        gcc_median = benchmark["gcc_median"]
-        gap = round(overall - gcc_median, 2)
-        gap_colour = "#22C55E" if gap >= 0 else "#EF4444"
-        gap_label = f"+{gap}" if gap >= 0 else str(gap)
+        gcc_range_low = benchmark["gcc_range_low"]
+        gcc_range_high = benchmark["gcc_range_high"]
+        if overall < gcc_range_low:
+            position_label = "Below indicative range"
+            position_colour = "#EF4444"
+        elif overall > gcc_range_high:
+            position_label = "Above indicative range"
+            position_colour = "#22C55E"
+        else:
+            position_label = "Within indicative range"
+            position_colour = "#F59E0B"
         st.markdown(f"""
         <div class="card" style="margin-top:16px;padding:18px 20px;">
             <div style="font-size:11px;font-weight:600;color:#6B7280;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">
                 Sector Benchmark
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:13px;color:#374151;">GCC {org_sector} Median</span>
-                <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:#374151;">{gcc_median}/5.0</span>
+                <span style="font-size:13px;color:#374151;">Indicative Sector Range</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:#374151;">{gcc_range_low} — {gcc_range_high}</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-size:13px;color:#374151;">Your Score</span>
                 <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:{colour};">{overall}/5.0</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <span style="font-size:13px;color:#374151;">Gap to Median</span>
-                <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:{gap_colour};">{gap_label}</span>
+                <span style="font-size:13px;color:#374151;">Position</span>
+                <span style="font-size:12px;font-weight:700;color:{position_colour};">{position_label}</span>
             </div>
             <div style="font-size:11px;color:#9CA3AF;font-style:italic;border-top:1px solid #F0F2F5;padding-top:8px;">
-                Indicative benchmark based on public GCC energy AI disclosures. Not a proprietary dataset.
+                Indicative ranges based on publicly available GCC energy AI disclosures. Not derived from a proprietary survey dataset.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -339,8 +346,8 @@ def show_results_view(results):
         cats_plot = short_cats + [short_cats[0]]
         vals_plot = values + [values[0]]
 
-        median_val = benchmark["gcc_median"]
-        median_vals = [median_val] * len(categories) + [median_val]
+        range_mid = round((benchmark["gcc_range_low"] + benchmark["gcc_range_high"]) / 2, 2)
+        median_vals = [range_mid] * len(categories) + [range_mid]
 
         fig = go.Figure()
         for ref_val in [1, 2, 3, 4, 5]:
@@ -354,8 +361,8 @@ def show_results_view(results):
             r=median_vals, theta=cats_plot, fill="toself",
             fillcolor="rgba(100,116,139,0.06)",
             line=dict(color="rgba(100,116,139,0.4)", width=1.5, dash="dot"),
-            name=f"GCC {org_sector} Median ({median_val})",
-            hovertemplate=f"GCC Median: {median_val}/5<extra></extra>",
+            name=f"GCC {org_sector} Range midpoint ({range_mid})",
+            hovertemplate=f"Indicative range: {benchmark['gcc_range_low']}–{benchmark['gcc_range_high']}<extra></extra>",
         ))
         fig.add_trace(go.Scatterpolar(
             r=vals_plot, theta=cats_plot, fill="toself",
