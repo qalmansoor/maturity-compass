@@ -306,9 +306,9 @@ def generate_report(
 
     # Get sector benchmark data
     benchmark = SECTOR_BENCHMARKS.get(org_sector, SECTOR_BENCHMARKS["Other Energy"])
-    gcc_range_low = benchmark["gcc_range_low"]
-    gcc_range_high = benchmark["gcc_range_high"]
-    gap_to_leaders = benchmark["leader_score_estimate"]
+    gcc_range_low = benchmark.get("gcc_range_low", 2.0)
+    gcc_range_high = benchmark.get("gcc_range_high", 2.8)
+    gap_to_leaders = benchmark.get("leader_score_estimate", "3.5–4.5")
 
     dim_summary = "\n".join([
         f"- {dim}: {score}/5.0 ({get_score_label(score)})"

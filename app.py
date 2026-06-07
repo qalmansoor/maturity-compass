@@ -264,8 +264,8 @@ def show_results_view(results):
         """, unsafe_allow_html=True)
 
         # Sector benchmark
-        gcc_range_low = benchmark["gcc_range_low"]
-        gcc_range_high = benchmark["gcc_range_high"]
+        gcc_range_low = benchmark.get("gcc_range_low", 2.0)
+        gcc_range_high = benchmark.get("gcc_range_high", 2.8)
         if overall < gcc_range_low:
             position_label = "Below indicative range"
             position_colour = "#EF4444"
